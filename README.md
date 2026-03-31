@@ -7,11 +7,23 @@ sdk: docker
 pinned: false
 ---
 
-# Tier 1 SOC Analyst Alert Triage (Meta PyTorch OpenEnv Hackathon Project)
+# Tier 1 SOC Analyst: Procedural Alert Triage OpenEnv
 
-## Environment Motivation & Description
-Cybersecurity Security Operations Centers (SOCs) are overwhelmed with "alert fatigue." Analysts spend countless hours reading logs just to triage false positives. 
-This environment models the exact workflow of a Tier 1 SOC Analyst. The agent must read an incoming alert, retrieve internal logs, check threat intelligence, and make a high-stakes decision (Close, Block IP, Quarantine Host, or Escalate).
+## Project Structure
+- `src/`: Core environment implementation and Pydantic schemas.
+- `api/`: FastAPI server and interactive HTML5 dashboard.
+- `tests/`: Adversarial fuzzing and reliability testing suite.
+- `scripts/`: Inference, benchmarking, and development utilities.
+- `Dockerfile`: Production-ready containerization.
+- `openenv.yaml`: Meta OpenEnv environment configuration.
+
+## Setup & Training
+1. Install dependencies: `pip install -r requirements.txt`
+2. Start the environment server: `python api/app.py`
+3. Run local inference: `python scripts/inference.py`
+
+## Live Demo
+[Hugging Face Space](https://huggingface.co/spaces/abhishekjiii/soc_triage_openenv)ce, and make a high-stakes decision (Close, Block IP, Quarantine Host, or Escalate).
 
 This fills a massive capability gap: evaluating an AI Agent's capacity to safely handle security alerts.
 
