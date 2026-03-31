@@ -23,8 +23,13 @@ def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/reset/{task_id}")
-def reset(task_id: str):
+def reset_with_id(task_id: str):
     obs = env_instance.reset(task_id)
+    return obs
+
+@app.post("/reset")
+def reset_default():
+    obs = env_instance.reset("random")
     return obs
 
 @app.post("/step")

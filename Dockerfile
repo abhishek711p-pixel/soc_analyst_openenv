@@ -9,4 +9,4 @@ COPY . .
 
 # Hugging Face Spaces expects the web server to run on port 7860
 EXPOSE 7860
-CMD ["python", "server/app.py"]
+CMD ["python", "app.py"]

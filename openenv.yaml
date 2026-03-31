@@ -5,7 +5,7 @@ tags:
   - openenv
   - rl
   - security
-entrypoint: env.py:SOCTriageEnv
+entrypoint: env:SOCTriageEnv
 tasks:
   - id: easy
     description: "Triage a simple failed login attempt from an internal scanner (False Positive)."
