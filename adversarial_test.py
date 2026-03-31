@@ -1,8 +1,8 @@
 import time
 import requests
 import json
-from src.env import SOCTriageEnv
-from src.schemas import SOCAction
+from env import SOCTriageEnv
+from schemas import SOCAction
 
 def adversarial_test():
     base_url = "http://127.0.0.1:7860"

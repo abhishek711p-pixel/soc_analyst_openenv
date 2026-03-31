@@ -1,6 +1,6 @@
 import json
 import random
-from src.schemas import SOCAction, Observation, Reward, AlertContext
+from schemas import SOCAction, Observation, Reward, AlertContext
 from typing import Tuple, Dict
 
 class SOCTriageEnv:

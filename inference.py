@@ -1,8 +1,8 @@
 import os
 import json
 from openai import OpenAI
-from src.env import SOCTriageEnv
-from src.schemas import SOCAction
+from env import SOCTriageEnv
+from schemas import SOCAction
 
 # Hackathon Mandatory Variables
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")

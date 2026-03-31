@@ -8,15 +8,15 @@ import os
 
 # Ensure the root directory is on the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.env import SOCTriageEnv
-from src.schemas import SOCAction, Observation, Reward
+from env import SOCTriageEnv
+from schemas import SOCAction, Observation, Reward
 
 app = FastAPI(title="Tier 1 SOC Analyst Alert Triage OpenEnv", default_response_class=ORJSONResponse)
 env_instance = SOCTriageEnv()
 
 # Mounting the templates directory as static for CSS/JS
-app.mount("/static", StaticFiles(directory="api/templates"), name="static")
-templates = Jinja2Templates(directory="api/templates")
+app.mount("/static", StaticFiles(directory="templates"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):

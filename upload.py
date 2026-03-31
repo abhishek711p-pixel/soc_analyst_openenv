@@ -11,10 +11,10 @@ print(f"Creating Space {repo_id}...")
 api.create_repo(repo_id=repo_id, repo_type="space", space_sdk="docker", exist_ok=True)
 
 files_to_upload = [
-    "src/env.py", "src/schemas.py", "scripts/inference.py", "Dockerfile", 
+    "env.py", "schemas.py", "inference.py", "Dockerfile", 
     "README.md", "requirements.txt", "openenv.yaml", 
-    "pyproject.toml", "api/app.py", "api/templates/index.html", "uv.lock",
-    "tests/adversarial_test.py", "scripts/test_server_load.py"
+    "pyproject.toml", "app.py", "templates/index.html", "uv.lock",
+    "adversarial_test.py", "test_server_load.py"
 ]
 
 print("Uploading files individually...")
