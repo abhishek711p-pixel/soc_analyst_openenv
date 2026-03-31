@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier 1 SOC Analyst - OpenEnv Dashboard</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: rgba(22, 27, 34, 0.7);
+            --border-glow: #00f0ff;
+            --text-main: #c9d1d9;
+            --text-accent: #00f0ff;
+            --alert-red: #ff3366;
+            --success-green: #3fb950;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 51, 102, 0.05), transparent 25%);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(13, 17, 23, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-accent);
+            margin: 0;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        .badge {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--text-accent);
+            border: 1px solid var(--text-accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 20px;
+            padding: 30px 40px;
+            flex-grow: 1;
+            height: calc(100vh - 90px);
+            max-height: calc(100vh - 90px);
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .panel-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mission-control {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn-init {
+            background: transparent;
+            color: var(--text-accent);
+            border: 1px solid var(--border-glow);
+            padding: 10px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn-init:hover {
+            background: var(--text-accent);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        }
+
+        .data-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+        }
+
+        .data-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #8b949e;
+            text-transform: uppercase;
+        }
+
+        .data-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+        .data-value-small { font-size: 0.95rem; font-family: 'JetBrains Mono';}
+        
+        .value-critical { color: var(--alert-red); }
+        .value-safe { color: var(--success-green); }
+
+        .alert-desc {
+            border-left: 4px solid var(--text-accent);
+            padding: 10px 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            color: #fff;
+            font-style: italic;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #c9d1d9;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .btn-action:hover:not(:disabled) {
+            background: rgba(0, 240, 255, 0.05);
+            border-color: rgba(0, 240, 255, 0.6);
+            color: #00f0ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.15);
+        }
+        .btn-action:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-action.btn-danger:hover:not(:disabled) {
+            background: rgba(255, 51, 102, 0.2);
+            border-color: var(--alert-red);
+            color: var(--alert-red);
+        }
+        .btn-action.btn-advanced:hover:not(:disabled) {
+            background: rgba(138, 43, 226, 0.2);
+            border-color: #8A2BE2;
+            color: #8A2BE2;
+        }
+
+        .score-display {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success-green);
+            text-align: center;
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid var(--success-green);
+            background: rgba(63, 185, 80, 0.1);
+            border-radius: 8px;
+        }
+
+        .terminal {
+            background: #000;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            background: #161b22;
+            padding: 10px 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #8b949e;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #ff5f56; }
+        .dot:nth-child(2) { background: #ffbd2e; }
+        .dot:nth-child(3) { background: #27c93f; }
+
+        .terminal-body {
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #3fb950;
+            overflow-y: auto;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .log-entry { margin-bottom: 15px; }
+        .log-system { color: #8b949e; font-size: 0.85rem;}
+        .log-action { color: var(--text-accent); font-size: 0.9rem;}
+        .log-reward { color: #ffbd2e; margin-left: 10px;}
+        .log-error { color: var(--alert-red); }
+        
+        .json-payload {
+            background: #10141a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 3px solid #8A2BE2;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            color: #c9d1d9;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>OpenEnv // SOC Analyst Triage</h1>
+        <div class="badge">PROCEDURAL ENGINE: ACTIVE</div>
+    </header>
+
+    <main>
+        <div class="panel">
+            <div class="panel-header">
+                <span>Threat Context</span>
+                <span id="env-status" style="color: #8b949e; font-size: 0.9rem;">Awaiting Initialization</span>
+            </div>
+
+            <div class="mission-control" style="margin-bottom: 35px;">
+                <button class="btn-init" onclick="initializeEnv('easy')">EASY TASK</button>
+                <button class="btn-init" onclick="initializeEnv('medium')">MEDIUM TASK</button>
+                <button class="btn-init" onclick="initializeEnv('hard')">HARD TASK</button>
+            </div>
+
+            <div class="data-grid">
+                <div class="data-row">
+                    <div class="data-label">Source IP [Target]</div>
+                    <div class="data-value data-value-small" id="disp-ip" style="color: var(--text-accent);">---</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Affected Host [Target]</div>
+                    <div class="data-value data-value-small" id="disp-host" style="color: var(--text-accent);">---</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Severity</div>
+                    <div class="data-value" id="disp-severity">---</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">Time Remaining</div>
+                    <div class="data-value" id="disp-time">---</div>
+                </div>
+            </div>
+
+            <div class="alert-desc" id="disp-desc">
+                Select a task above to procedurally generate a randomized cybersecurity alert into the OpenEnv environment.
+            </div>
+
+            <div class="actions-grid">
+                <button class="btn-action" onclick="takeAction('READ_LOGS', 'host')" disabled id="act-btn-1">READ_LOGS()</button>
+                <button class="btn-action" onclick="takeAction('CHECK_IP_REPUTATION', 'ip')" disabled id="act-btn-2">CHECK_IP()</button>
+                <button class="btn-action btn-danger" onclick="takeAction('BLOCK_IP', 'ip')" disabled id="act-btn-3">BLOCK_IP()</button>
+                <button class="btn-action btn-advanced" onclick="takeAction('RUN_MALWARE_SANDBOX', 'host')" disabled id="act-btn-8">SANDBOX()</button>
+                <button class="btn-action btn-advanced" onclick="takeAction('EMAIL_USER', 'host')" disabled id="act-btn-9">EMAIL()</button>
+                <button class="btn-action btn-danger" onclick="takeAction('QUARANTINE_HOST', 'host')" disabled id="act-btn-4">QUARANTINE()</button>
+                <button class="btn-action" onclick="takeAction('CLOSE_FALSE_POSITIVE', null)" disabled id="act-btn-5">FALSE_POS()</button>
+                <button class="btn-action" onclick="takeAction('CLOSE_RESOLVED', null)" disabled id="act-btn-6">RESOLVED()</button>
+                <button class="btn-action btn-danger" onclick="takeAction('ESCALATE_TIER_2', null)" disabled id="act-btn-7">ESCALATE()</button>
+            </div>
+            
+            <div id="disp-score" class="score-display" style="display: none;">Score: 1.0</div>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                Raw Artifact Stream
+            </div>
+            <div class="terminal-body" id="terminal-out">
+                <div class="log-entry log-system">System booted. AI Agent interface connected. Features dynamic JSON structures...</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentHost = null;
+        let currentIP = null;
+        let isDone = false;
+        let loggedKeys = new Set();
+
+        function logToTerminal(msg, type='system', reward='', jsonPayload=null) {
+            const term = document.getElementById('terminal-out');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            
+            let htmlStr = `> ${msg} <span class="log-reward">${reward ? '[Reward: ' + reward + ']' : ''}</span>`;
+            
+            if (jsonPayload) {
+                // Try to prettify json strings to look like proper Hacker Data
+                let formattedJson = jsonPayload;
+                try {
+                    formattedJson = JSON.stringify(JSON.parse(jsonPayload), null, 2);
+                } catch(e) {}
+                htmlStr += `<div class="json-payload">${formattedJson}</div>`;
+            }
+            
+            entry.innerHTML = htmlStr;
+            term.appendChild(entry);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function setButtonsEnabled(enabled) {
+            for(let i=1; i<=9; i++) {
+                let el = document.getElementById(`act-btn-${i}`);
+                if(el) el.disabled = !enabled;
+            }
+        }
+
+        function updateUI(obs) {
+            const alert = obs.current_alert || {};
+            
+            const sevEl = document.getElementById('disp-severity');
+            sevEl.innerText = alert.severity || '---';
+            if(alert.severity === 'CRITICAL' || alert.severity === 'HIGH') {
+                sevEl.className = 'data-value value-critical';
+            } else {
+                sevEl.className = 'data-value value-safe';
+            }
+
+            currentHost = alert.affected_host;
+            currentIP = alert.source_ip;
+            
+            document.getElementById('disp-host').innerText = currentHost || '---';
+            document.getElementById('disp-ip').innerText = currentIP || '---';
+            
+            document.getElementById('disp-time').innerText = obs.system_time_remaining ?? '---';
+            document.getElementById('disp-desc').innerText = alert.description || 'No alert active.';
+            
+            if(obs.available_logs) {
+                for(const [key, value] of Object.entries(obs.available_logs)) {
+                    if(!loggedKeys.has(key)) {
+                        logToTerminal(`LOG UPDATE [${key}]:`, 'system', '', value);
+                        loggedKeys.add(key);
+                    }
+                }
+            }
+        }
+
+        async function initializeEnv(taskId) {
+            setButtonsEnabled(false);
+            isDone = false;
+            loggedKeys.clear();
+            document.getElementById('disp-score').style.display = 'none';
+            document.getElementById('terminal-out').innerHTML = '';
+            document.getElementById('env-status').innerText = `Generating [${taskId.toUpperCase()}] Scenario...`;
+
+            try {
+                const res = await fetch(`/reset/${taskId}`, { method: 'POST' });
+                const obs = await res.json();
+                
+                logToTerminal(`Procedural generation complete. Target IP: ${obs.current_alert.source_ip}`, 'system');
+                updateUI(obs);
+                setButtonsEnabled(true);
+                document.getElementById('env-status').innerText = `Task: ${taskId.toUpperCase()} | Active`;
+            } catch(e) {
+                logToTerminal(`Error connecting to OpenEnv API: ${e}`, 'error');
+            }
+        }
+
+        async function takeAction(actionCommand, targetType) {
+            if(isDone) return;
+            setButtonsEnabled(false);
+            
+            let target = null;
+            if(targetType === 'host') target = currentHost;
+            if(targetType === 'ip') target = currentIP;
+            
+            const targetStr = target ? `Target: ${target}` : 'Target: None';
+            logToTerminal(`Executing action: ${actionCommand} | ${targetStr}`, 'action');
+
+            const payload = {
+                command: actionCommand,
+                target: target,
+                reason: "Manual reviewer testing dynamic responses."
+            };
+
+            try {
+                const res = await fetch(`/step`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                logToTerminal(`System Response: ${data.observation.last_action_result}`, 'system', (data.reward.score > 0 ? '+' : '') + data.reward.score.toFixed(2));
+                updateUI(data.observation);
+
+                if(data.done) {
+                    isDone = true;
+                    document.getElementById('env-status').innerText = 'Episode Terminated';
+                    document.getElementById('env-status').style.color = 'var(--alert-red)';
+                    logToTerminal(`EPISODE COMPLETE.`, 'system');
+                    
+                    if(data.info.grader_score !== undefined) {
+                        const scoreEl = document.getElementById('disp-score');
+                        scoreEl.style.display = 'block';
+                        scoreEl.innerText = `Final Evaluator Score: ${parseFloat(data.info.grader_score).toFixed(2)} / 1.00`;
+                    }
+                } else {
+                    setButtonsEnabled(true);
+                }
+
+            } catch(e) {
+                logToTerminal(`API Error: ${e}`, 'error');
+                setButtonsEnabled(true);
+            }
+        }
+    </script>
+</body>
+</html>

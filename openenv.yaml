@@ -1,0 +1,15 @@
+name: soc_triage_env
+version: 1.0.0
+description: "Tier 1 SOC Cybersecurity Alert Triage Environment"
+tags:
+  - openenv
+  - rl
+  - security
+entrypoint: env.py:SOCTriageEnv
+tasks:
+  - id: easy
+    description: "Triage a simple failed login attempt from an internal scanner (False Positive)."
+  - id: medium
+    description: "Investigate a suspicious executable downloaded from a known malicious IP."
+  - id: hard
+    description: "Triage a multi-stage ransomware attack requiring immediate containment."

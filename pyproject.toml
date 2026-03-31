@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "soc_triage_env"
+version = "1.0.0"
+description = "Tier 1 SOC Cybersecurity Alert Triage Environment"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0.0",
+    "openai>=1.0.0",
+    "openenv-core"
+]
+
+[project.scripts]
+server = "server.app:main"
