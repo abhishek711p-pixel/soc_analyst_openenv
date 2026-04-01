@@ -1,6 +1,6 @@
 pydantic>=2.0.0
 openai>=1.0.0
 fastapi
-uvicorn
-orjson
+uvicorn[standard]
+aiofiles
 jinja2

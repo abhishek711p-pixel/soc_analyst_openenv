@@ -1,17 +1,17 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, ORJSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
 import sys
 import os
 
-# Ensure the root directory is on the path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Ensure the current directory is on the path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from env import SOCTriageEnv
 from schemas import SOCAction, Observation, Reward
 
-app = FastAPI(title="Tier 1 SOC Analyst Alert Triage OpenEnv", default_response_class=ORJSONResponse)
+app = FastAPI(title="Tier 1 SOC Analyst Alert Triage OpenEnv")
 env_instance = SOCTriageEnv()
 
 # Mounting the templates directory as static for CSS/JS
